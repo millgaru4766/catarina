@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+	<property name="LOGS_ERROR_ABSOLUTE_PATH" value="./logs/error" />
+	<property name="LOGS_REQUEST_ABSOLUTE_PATH"
+		value="./logs/request" />
+
+
+	<appender name="CONSOLE"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<discriminator>
+
+				<key>LoginUser</key>
+
+				<defaultValue>unknown</defaultValue>
+
+			</discriminator>
+
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%X{LoginUser}] [%-5p] [%C]
+				%M\(%L\) : %m%n
+			</pattern>
+		</layout>
+	</appender>
+
+	<appender name="ERROR_LOG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGS_ERROR_ABSOLUTE_PATH}/errorLogback.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOGS_ERROR_ABSOLUTE_PATH}/errorLogback.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>6</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %X{userId} [%thread]
+				%logger{35} [%-5p] [%C] %M\(%L\) : %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="REQUEST_LOG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGS_REQUEST_ABSOLUTE_PATH}/requestLogback.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOGS_REQUEST_ABSOLUTE_PATH}/requestLogback.%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 100MB -->
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+			<maxHistory>6</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] %X{userId} [%thread]
+				%logger{35} [%-5p] [%C] %M\(%L\) : %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+	<logger name="ERROR_LOGGER" level="ERROR" additivity="false">
+		<appender-ref ref="ERROR_LOG" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<logger name="REQUEST_LOGGER" level="INFO" additivity="false">
+		<appender-ref ref="REQUEST_LOG" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+
+</configuration>
